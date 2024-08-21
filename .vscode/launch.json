@@ -1,0 +1,83 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(dev) Multi Notification ",
+            "request": "launch",
+            "type": "dart",
+            // "flutterMode": "debug",
+            "program": "./lib/main.dart",
+            // flutter run --enable-impeller
+            "args": [
+                // "--profile"
+                // "--enable-impeller"
+                // "--flavor",
+                // "dev",
+                // "--no-sound-null-safety"
+            ]
+        },
+        {
+            "name": "(profile) Multi Notification ",
+            "request": "launch",
+            "type": "dart",
+            // "flutterMode": "debug",
+            "program": "./lib/main.dart",
+            // flutter run --enable-impeller
+            "args": [
+                "--profile",
+                "--cache-sksl",
+                "--purge-persistent-cache"
+                // "--enable-impeller"
+                // "--flavor",
+                // "dev",
+                // "--no-sound-null-safety"
+            ]
+        },
+        {
+            "name": "(release) Multi Notification ",
+            "request": "launch",
+            "type": "dart",
+            // "flutterMode": "debug",
+            "program": "./lib/main.dart",
+            // flutter run --enable-impeller
+            "args": [
+                "--release"
+                // "--enable-impeller"
+                // "--flavor",
+                // "dev",
+                // "--no-sound-null-safety"
+            ]
+        },
+        {
+            "name": "(dev) [DEMO] Multi Notification",
+            "request": "launch",
+            "type": "dart",
+            // "flutterMode": "debug",
+            "program": "./lib/main_demo.dart",
+            "args": [
+                // "--profile"
+                // "--enable-impeller"
+                // "--flavor",
+                // "dev",
+                // "--no-sound-null-safety"
+            ]
+        },
+        // {
+        //     "name": "Multi Notification (release)",
+        //     "request": "launch",
+        //     "type": "dart",
+        //     // "flutterMode": "profile",
+        //    // "flutterMode": "release",
+        //     "program": "./lib/main.dart",
+        //     "args": [
+        //         // "--flavor",
+        //         //  "dev",
+        //         //  "--no-sound-null-safety"
+        //         "--release"
+        //     ]
+        // },
+    ]
+}

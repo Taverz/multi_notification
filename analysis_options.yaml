@@ -1,0 +1,17 @@
+include: package:flutter_lints/flutter.yaml
+
+# Additional information about this file can be found at
+# https://dart.dev/guides/language/analysis-options
+
+analyzer:
+  exclude:
+    - .dart_tool/**.*
+    - .idea/**.*
+    - .vscode/**.*
+    - assets/**.*
+    - res/**.*
+    - lib/src/resources/**.*
+    - '**.info.dart'
+    - '**.g.dart'
+    - '**.freezed.dart'
+    - '**.mocks.dart'
