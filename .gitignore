@@ -10,10 +10,10 @@
 .svn/
 migrate_working_dir/
 
-doc/settings_firebase.md
-doc/settings_huawei.md
-doc/*
-doc/
+# doc/settings_firebase.md
+# doc/settings_huawei.md
+# doc/*
+# doc/
 
 # IntelliJ related
 *.iml
