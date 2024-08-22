@@ -1,36 +1,33 @@
 import 'dart:async';
-import 'package:domain/domain.dart';
+import 'package:multi_notification/src/data_source/notiofication_server_repository.dart';
+import 'package:multi_notification/src/data_source/local_state_noticiation.dart';
 import 'package:multi_notification/src/data_source/server_device.dart';
 import 'package:multi_notification/src/model/notification_model.dart';
 import 'package:multi_notification/src/repository/notification_repository.dart'
     as not;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../data_source/firebase_service_impl.dart';
 import '../data_source/notification_service.dart';
 
 class NotificationIntegrationImpl implements not.NotificationIntegration {
   NotificationIntegrationImpl(
-    this._notificationAddDeviceUseCase,
     this.repositoryNotification,
-    this.secureStorage,
+    this.localStateNotificationRepository,
   );
 
-  final NotificationAddDeviceUseCase _notificationAddDeviceUseCase;
-  final NotificationRepository repositoryNotification;
-  final FlutterSecureStorage secureStorage;
-  final String _keyStorageActiveNotification = 'active_notification';
+  final NotificationServerRepository repositoryNotification;
+  final LocalStateNotificationRepository localStateNotificationRepository;
 
   static String? _tokenPush;
   @override
   String? get tokenPush => _tokenPush;
 
-  static final StreamController<String> _tokenStream =
-      StreamController.broadcast();
+  static final _tokenStream =
+      StreamController<String>.broadcast();
   @override
   StreamController<String> get tokenStream => _tokenStream;
 
-  static final StreamController<NotificationModel> _notificationStream =
-      StreamController.broadcast();
+  static final _notificationStream =
+      StreamController<NotificationModel>.broadcast();
   @override
   StreamController<NotificationModel> get notificationStream =>
       _notificationStream;
@@ -41,10 +38,8 @@ class NotificationIntegrationImpl implements not.NotificationIntegration {
   bool get active => _active && _fullInit;
 
   late NotificationService _notificationService;
-  final ServerNotificationDevice _serverNotificationDevice =
-      ServerNotificationDevice();
-  final ServerDisableNotification _serverDisableNotification =
-      ServerDisableNotification();
+  final _serverNotificationDevice = ServerNotificationRegisterDevice();
+  final _serverDisableNotification = ServerDisableNotification();
 
   @override
   void closeAll() {
@@ -118,7 +113,7 @@ class NotificationIntegrationImpl implements not.NotificationIntegration {
       await _getActiveNotification();
     } catch (_) {}
     await _serverNotificationDevice.registerDevice(
-      _notificationAddDeviceUseCase,
+      repositoryNotification,
       _tokenPush!,
       true,
       nameDevice,
@@ -148,6 +143,7 @@ class NotificationIntegrationImpl implements not.NotificationIntegration {
   @override
   @pragma('vm:entry-point')
   Future<void> initMain({bool useFirebase = true}) async {
+    await localStateNotificationRepository.init();
     _getActiveNotification();
     if (active) return;
 
@@ -184,22 +180,18 @@ class NotificationIntegrationImpl implements not.NotificationIntegration {
 
   Future<void> _switchActiveNotification(bool active) async {
     _active = active;
-    await secureStorage.write(
-      key: _keyStorageActiveNotification,
-      value: active.toString(),
-    );
+    await localStateNotificationRepository.changeActive(active);
     await _getActiveNotification();
   }
 
   Future<void> _getActiveNotification() async {
-    final activeStr =
-        await secureStorage.read(key: _keyStorageActiveNotification);
+    final activeStr = await localStateNotificationRepository.getStatusActive();
     _active = activeStr == 'true';
   }
 
   void _clearStreams() {
     // Clear existing streams
-    _notificationStream.addStream(Stream<NotificationModel>.empty());
-    _tokenStream.addStream(Stream<String>.empty());
+    _notificationStream.addStream(const Stream<NotificationModel>.empty());
+    _tokenStream.addStream(const Stream<String>.empty());
   }
 }

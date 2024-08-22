@@ -9,6 +9,7 @@
 ; .DS_Store
 ; *.log
 build/
+example_multi_notification/build/
 ; coverage/
 
 ; # Исключить пользовательские файлы и каталоги

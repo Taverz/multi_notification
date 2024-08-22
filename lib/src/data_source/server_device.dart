@@ -2,12 +2,13 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:domain/domain.dart';
 import 'package:flutter/foundation.dart';
+import 'package:multi_notification/src/data_source/notiofication_server_repository.dart';
+import 'package:multi_notification/src/model/notification_server_entity.dart';
 
-class ServerNotificationDevice {
+class ServerNotificationRegisterDevice {
   Future<void> registerDevice(
-    NotificationAddDeviceUseCase _notificationAddDeviceUseCase,
+    NotificationServerRepository notificationServerRepository,
     String tokenNotification,
     bool active,
     String nameDevice,
@@ -46,14 +47,16 @@ class ServerNotificationDevice {
       // );
       return true;
     }());
-    await _notificationAddDeviceUseCase.call(model);
+    await notificationServerRepository.registerDevice(model);
   }
 }
 
 class ServerDisableNotification {
   Future<void> switchActiveNotification(
-      NotificationRepository repositoryNotification, String tokenNotification,
-      {bool active = false}) async {
+    NotificationServerRepository notificationServerRepository,
+    String tokenNotification, {
+    bool active = false,
+  }) async {
     final notificationPlatform = Platform.isAndroid
         ? NotificationCurrentPlatform.android
         : Platform.isIOS
@@ -62,10 +65,6 @@ class ServerDisableNotification {
     final model = NotificationEntity(
       registrationId: tokenNotification,
       type: notificationPlatform,
-      // id: UniqueKey().hashCode,
-      // deviceId: idDevice,
-      // name: name,
-      // dateCreated: utcTime,
       active: active,
 
       deviceId: null,
@@ -79,6 +78,6 @@ class ServerDisableNotification {
       // );
       return true;
     }());
-    await repositoryNotification.disableNotification(fcmDevice: model);
+    await notificationServerRepository.disableNotification(model);
   }
 }

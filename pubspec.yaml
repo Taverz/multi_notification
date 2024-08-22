@@ -1,5 +1,5 @@
 name: multi_notification
-description: "TODO"
+description: "Multi notification (Firebase Push, Huawei Push, other) from simple add your project"
 version: 0.0.1
 repository: https://github.com/Taverz/TODO
 homepage: https://github.com/Taverz/TODO

@@ -12,14 +12,10 @@
 
 
 ```bash
-chmod +x get_access_token.sh
-chmod +x send_push_notifications.sh
+chmod +x scripts/get_access_token.sh
+chmod +x scripts/send_push_notifications.sh
 ```
 
-```bash
-chmod +x packages/notification/get_access_token.sh
-chmod +x packages/notification/send_push_notifications.sh
-```
 
 
 

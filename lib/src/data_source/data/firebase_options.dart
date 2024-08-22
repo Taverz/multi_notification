@@ -31,49 +31,20 @@ class DefaultFirebaseOptions {
     }
   }
 
-  // static const FirebaseOptions web = FirebaseOptions(
-  //   apiKey: 'AIzaSyC8jqdtTywyuOeE8jXIuCnUzidNp39qgGA',
-  //   appId: '1:588960304455:web:58fb54259f2856af191062',
-  //   messagingSenderId: '588960304455',
-  //   projectId: 'chulpaninsurance',
-  //   authDomain: 'chulpaninsurance.firebaseapp.com',
-  //   storageBucket: 'chulpaninsurance.appspot.com',
-  //   measurementId: 'G-KTC9EENGES',
-  // );
-
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyADKa1BkwQysUZiOVysXXC2uQVFVHBSGJA',
+    apiKey: '239ASFSDKIzaSyALMFDSF23ZiOVysXXC2uQVFVHBSGJ232D',
     appId: '1:588960304455:android:e3865bac17f0baf4191062',
     messagingSenderId: '588960304455',
-    projectId: 'chulpaninsurance',
-    storageBucket: 'chulpaninsurance.appspot.com',
+    projectId: 'example',
+    storageBucket: 'example.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAqDz-_IcGd0y2J3ep81pUz2Pm9K6Lf8g4',
-    appId: '1:588960304455:ios:c4ea2f06f93e6ad4191062',
+    apiKey: '239ASFSDKIzaSyALMFDSF23ZiOVysXXC2uQVFVHBSGJ232D',
+    appId: '1:588960304455:android:e3865bac17f0baf4191062',
     messagingSenderId: '588960304455',
-    projectId: 'chulpaninsurance',
-    storageBucket: 'chulpaninsurance.appspot.com',
-    iosBundleId: 'ru.chulpan.chulpanMobile',
+    projectId: 'example',
+    storageBucket: 'example.appspot.com',
   );
 
-  // static const FirebaseOptions macos = FirebaseOptions(
-  //   apiKey: 'AIzaSyAqDz-_IcGd0y2J3ep81pUz2Pm9K6Lf8g4',
-  //   appId: '1:588960304455:ios:c4ea2f06f93e6ad4191062',
-  //   messagingSenderId: '588960304455',
-  //   projectId: 'chulpaninsurance',
-  //   storageBucket: 'chulpaninsurance.appspot.com',
-  //   iosBundleId: 'ru.chulpan.chulpanMobile',
-  // );
-
-  // static const FirebaseOptions windows = FirebaseOptions(
-  //   apiKey: 'AIzaSyC8jqdtTywyuOeE8jXIuCnUzidNp39qgGA',
-  //   appId: '1:588960304455:web:3be1f6fa5a1f7b52191062',
-  //   messagingSenderId: '588960304455',
-  //   projectId: 'chulpaninsurance',
-  //   authDomain: 'chulpaninsurance.firebaseapp.com',
-  //   storageBucket: 'chulpaninsurance.appspot.com',
-  //   measurementId: 'G-346N3HZ939',
-  // );
 }
