@@ -74,7 +74,7 @@
    В файле `lib/main.dart` подключите сгенерированный файл `firebase_options.dart` и инициализируйте Firebase с его помощью:
    ```dart
    import 'package:firebase_core/firebase_core.dart';
-   import 'firebase_options.dart';
+   import '../docs/firebase_options.dart';
    import 'package:flutter/material.dart';
 
    void main() async {
