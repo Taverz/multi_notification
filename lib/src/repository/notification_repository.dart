@@ -1,53 +1,46 @@
 import 'dart:async';
-
 import '../model/notification_model.dart';
 
 abstract class NotificationIntegration {
-  /// Токен для уведомлений, который отправляется на сервер
-  /// для отправки уведомлений конкретному пользователю
-  static String? _tokenPush;
-  String? get tokenPush => _tokenPush;
+  /// Gets the push token for notifications.
+  String? get tokenPush;
 
-  static final StreamController<String> _tokenStream =
-      StreamController.broadcast();
-  StreamController<String> get tokenStream => _tokenStream;
+  /// Stream of push tokens.
+  Stream<String> get tokenStream;
 
-  static final StreamController<NotificationModel> _notificationStream =
-      StreamController.broadcast();
-  StreamController<NotificationModel> get notificationStream =>
-      _notificationStream;
+  /// Stream of notifications.
+  Stream<NotificationModel> get notificationStream;
 
-  static bool _active = true;
-  static bool _fullInit = true;
-  bool get active => _active && _fullInit;
+  /// Indicates whether notifications are active and fully initialized.
+  bool get active;
 
-  /// Запустить Firebase при старте приложения
+  /// Initializes the main notification system, optionally using Firebase.
   Future<void> initMain({bool useFirebase = false});
 
-  /// Уведомеления ...
+  /// Activates background notifications.
   Future<bool> backgroundNotificationActivate();
 
-  ///////// -------------------------
-  /// Получить токен Firebase при старте приложения
+  /// Initializes the Firebase token for notifications.
   Future<bool> tokenInitNotification();
 
+  /// Updates the Firebase token for notifications.
   Future<bool> tokenUpdateNotification();
 
-  ///////// -------------------------
-
-  /// Уведомеления ...
+  /// Activates foreground notifications.
   Future<bool> foregroundNotificationActivate();
 
-  ///////// -------------------------
-  /// <вместе с запросом на сервер> Отключить работу уведомлений, пермишен не будет отключен, но токен удалиться
+  /// Disables notifications for the specified device.
   Future<bool> disableNotification({required String nameDevice});
 
-  /// <вместе с запросом на сервер> Включить работу уведомлений
+  /// Activates notifications for the specified device.
   Future<bool> activeNotification({required String nameDevice});
 
+  /// Updates the token for notifications.
   Future<void> updateTokenNotification();
 
+  /// Closes all streams and resources.
   void closeAll();
 
+  /// Registers the device for notifications with the specified name.
   Future<void> registerDevice({required String nameDevice});
 }

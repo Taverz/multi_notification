@@ -21,16 +21,15 @@ class NotificationIntegrationImpl implements not.NotificationIntegration {
   @override
   String? get tokenPush => _tokenPush;
 
-  static final _tokenStream =
-      StreamController<String>.broadcast();
+  final _tokenStreamController = StreamController<String>.broadcast();
   @override
-  StreamController<String> get tokenStream => _tokenStream;
+  Stream<String> get tokenStream => _tokenStreamController.stream;
 
-  static final _notificationStream =
+  final _notificationStreamController =
       StreamController<NotificationModel>.broadcast();
   @override
-  StreamController<NotificationModel> get notificationStream =>
-      _notificationStream;
+  Stream<NotificationModel> get notificationStream =>
+      _notificationStreamController.stream;
 
   static bool _active = false;
   static bool _fullInit = false;
@@ -43,15 +42,18 @@ class NotificationIntegrationImpl implements not.NotificationIntegration {
 
   @override
   void closeAll() {
-    _notificationStream.close();
-    _tokenStream.close();
+    _closeStream(_tokenStreamController);
+    _closeStream(_notificationStreamController);
     _tokenPush = null;
   }
 
+  @override
   Future<void> updateTokenNotification() async {
     try {
       await _notificationService.tokenUpdateNotification();
-    } catch (_) {}
+    } catch (e) {
+      _handleError('Failed to update token notification', e);
+    }
   }
 
   @override
@@ -65,7 +67,8 @@ class NotificationIntegrationImpl implements not.NotificationIntegration {
         active: false,
       );
       return true;
-    } catch (_) {
+    } catch (e) {
+      _handleError('Failed to disable notification', e);
       return false;
     }
   }
@@ -77,7 +80,8 @@ class NotificationIntegrationImpl implements not.NotificationIntegration {
       await initMain();
       await registerDevice(nameDevice: nameDevice);
       return true;
-    } catch (_) {
+    } catch (e) {
+      _handleError('Failed to activate notification', e);
       return false;
     }
   }
@@ -88,7 +92,8 @@ class NotificationIntegrationImpl implements not.NotificationIntegration {
     try {
       await _notificationService.foregroundNotification();
       return true;
-    } catch (_) {
+    } catch (e) {
+      _handleError('Failed to activate foreground notification', e);
       return false;
     }
   }
@@ -99,7 +104,8 @@ class NotificationIntegrationImpl implements not.NotificationIntegration {
     try {
       await _notificationService.backgroundNotification();
       return true;
-    } catch (_) {
+    } catch (e) {
+      _handleError('Failed to activate background notification', e);
       return false;
     }
   }
@@ -111,33 +117,25 @@ class NotificationIntegrationImpl implements not.NotificationIntegration {
     }
     try {
       await _getActiveNotification();
-    } catch (_) {}
-    await _serverNotificationDevice.registerDevice(
-      repositoryNotification,
-      _tokenPush!,
-      true,
-      nameDevice,
-    );
+      await _serverNotificationDevice.registerDevice(
+        repositoryNotification,
+        _tokenPush!,
+        true,
+        nameDevice,
+      );
+    } catch (e) {
+      _handleError('Failed to register device', e);
+    }
   }
 
   @override
   Future<bool> tokenInitNotification() async {
-    try {
-      await _notificationService.tokenInitNotification();
-      return true;
-    } catch (_) {
-      return false;
-    }
+    return _initializeTokenNotification();
   }
 
   @override
   Future<bool> tokenUpdateNotification() async {
-    try {
-      await _notificationService.tokenUpdateNotification();
-      return true;
-    } catch (_) {
-      return false;
-    }
+    return _initializeTokenNotification();
   }
 
   @override
@@ -147,11 +145,11 @@ class NotificationIntegrationImpl implements not.NotificationIntegration {
     _getActiveNotification();
     if (active) return;
 
-    // Clear existing streams instead of reassigning
+    // Clear existing streams
     _clearStreams();
 
     final completer = Completer<String>();
-    _tokenStream.stream.listen((event) {
+    _tokenStreamController.stream.listen((event) {
       _tokenPush = event;
       if (!completer.isCompleted) {
         completer.complete(event);
@@ -168,13 +166,13 @@ class NotificationIntegrationImpl implements not.NotificationIntegration {
   Future<void> _initializeService(bool useFirebase) async {
     try {
       _notificationService = NotificationServiceFirebaseImpl(
-        _notificationStream,
-        _tokenStream,
+        _notificationStreamController,
+        _tokenStreamController,
       );
       await _notificationService.mainInit();
       _tokenPush = _notificationService.tokenPush;
     } catch (e) {
-      print('Failed to initialize Firebase Notification Service: $e');
+      _handleError('Failed to initialize Notification Service', e);
     }
   }
 
@@ -190,8 +188,28 @@ class NotificationIntegrationImpl implements not.NotificationIntegration {
   }
 
   void _clearStreams() {
-    // Clear existing streams
-    _notificationStream.addStream(const Stream<NotificationModel>.empty());
-    _tokenStream.addStream(const Stream<String>.empty());
+    _notificationStreamController
+        .addStream(const Stream<NotificationModel>.empty());
+    _tokenStreamController.addStream(const Stream<String>.empty());
+  }
+
+  void _closeStream(StreamController controller) {
+    if (!controller.isClosed) {
+      controller.close();
+    }
+  }
+
+  Future<bool> _initializeTokenNotification() async {
+    try {
+      await _notificationService.tokenInitNotification();
+      return true;
+    } catch (e) {
+      _handleError('Failed to initialize token notification', e);
+      return false;
+    }
+  }
+
+  void _handleError(String message, Object error) {
+    print('$message: $error');
   }
 }
